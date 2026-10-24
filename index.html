@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHANTOM AVIATOR</title>
+<style>
+body{margin:0;background:#090b10;color:white;font-family:Arial,sans-serif;padding:20px}
+main{max-width:500px;margin:auto}
+h1{color:#ff4655;text-align:center}
+.card{background:#171c27;padding:18px;border-radius:15px;margin:15px 0;border:1px solid #343b4a}
+button{padding:12px;border:0;border-radius:8px;background:#ff4655;color:white;font-weight:bold;margin:4px;cursor:pointer}
+input{padding:12px;width:85%;border-radius:8px;background:#090b10;color:white;border:1px solid #444}
+.result{font-size:38px;color:#ff4655;text-align:center;font-weight:bold}
+li{padding:7px}
+small{color:#abb4c4}
+</style>
+</head>
+<body>
+<main>
+<h1>⌁ PHANTOM AVIATOR</h1>
+<div class="card">
+<h3>SIMULATED DEMO PANEL</h3>
+<small>Demo only · No real-game connection</small>
+<p>Simulated multiplier</p>
+<div class="result" id="result">--.--x</div>
+<button onclick="generate()">Generate demo round</button>
+</div>
+<div class="card">
+<h3>Round history</h3>
+<ul id="history"><li>No rounds yet</li></ul>
+<button onclick="clearHistory()">Clear history</button>
+</div>
+<div class="card">
+<h3>History statistics</h3>
+<p>Rounds: <b id="count">0</b></p>
+<p>Average: <b id="average">—</b></p>
+<p>Highest: <b id="highest">—</b></p>
+</div>
+<div class="card">
+<small>Simulated results are random and cannot reveal or guarantee the next real Aviator multiplier.</small>
+</div>
+</main>
+<script>
+let rounds=[];
+function generate(){
+ let n=Math.random()<.7?1+Math.random()*1.5:1.5+Math.random()*8.5;
+ n=Number(n.toFixed(2));
+ rounds.unshift(n);
+ document.getElementById('result').textContent=n.toFixed(2)+'x';
+ render();
+}
+function render(){
+ document.getElementById('count').textContent=rounds.length;
+ document.getElementById('average').textContent=rounds.length?(rounds.reduce((a,b)=>a+b,0)/rounds.length).toFixed(2)+'x':'—';
+ document.getElementById('highest').textContent=rounds.length?Math.max(...rounds).toFixed(2)+'x':'—';
+ document.getElementById('history').innerHTML=rounds.length?rounds.slice(0,15).map((n,i)=>'<li>Round '+(rounds.length-i)+': '+n.toFixed(2)+'x</li>').join(''):'<li>No rounds yet</li>';
+}
+function clearHistory(){rounds=[];document.getElementById('result').textContent='--.--x';render();}
+</script>
+</body>
+</html>
