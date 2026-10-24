@@ -6,58 +6,60 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PHANTOM AVIATOR</title>
 <style>
-body{margin:0;background:#090b10;color:white;font-family:Arial,sans-serif;padding:20px}
+body{margin:0;background:#090b10;color:white;font-family:Arial,sans-serif;padding:16px}
 main{max-width:500px;margin:auto}
-h1{color:#ff4655;text-align:center}
-.card{background:#171c27;padding:18px;border-radius:15px;margin:15px 0;border:1px solid #343b4a}
-button{padding:12px;border:0;border-radius:8px;background:#ff4655;color:white;font-weight:bold;margin:4px;cursor:pointer}
-input{padding:12px;width:85%;border-radius:8px;background:#090b10;color:white;border:1px solid #444}
-.result{font-size:38px;color:#ff4655;text-align:center;font-weight:bold}
-li{padding:7px}
-small{color:#abb4c4}
+h1{text-align:center;color:#ff4655}
+.card{background:#171c27;padding:18px;border:1px solid #303747;border-radius:18px;margin:16px 0}
+input,button,textarea{box-sizing:border-box;padding:13px;border-radius:9px;font-size:16px;width:100%;margin-top:10px}
+input,textarea{background:#0c1019;color:white;border:1px solid #454d60}
+button{background:#ff4655;color:white;border:0;font-weight:bold}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#0c1019;padding:12px;border-radius:10px}
+.number{font-size:24px;color:#ff5968;font-weight:bold}
+small{color:#aab4c4}
 </style>
 </head>
 <body>
 <main>
-<h1>⌁ PHANTOM AVIATOR</h1>
+<h1>⚡ PHANTOM AVIATOR</h1>
 <div class="card">
-<h3>SIMULATED DEMO PANEL</h3>
-<small>Demo only · No real-game connection</small>
-<p>Simulated multiplier</p>
-<div class="result" id="result">--.--x</div>
-<button onclick="generate()">Generate demo round</button>
+<h3>HISTORY ANALYSER</h3>
+<small>Enter actual past multipliers separated by commas.</small>
+<textarea id="history" rows="4" placeholder="1.73, 3.43, 1.22, 1.97, 11.26"></textarea>
+<button onclick="analyse()">ANALYSE HISTORY</button>
 </div>
 <div class="card">
-<h3>Round history</h3>
-<ul id="history"><li>No rounds yet</li></ul>
-<button onclick="clearHistory()">Clear history</button>
+<h3>HISTORY STATISTICS</h3>
+<div class="stats">
+<div class="stat">Rounds<div class="number" id="count">0</div></div>
+<div class="stat">Average<div class="number" id="avg">—</div></div>
+<div class="stat">Highest<div class="number" id="high">—</div></div>
+<div class="stat">Below 2×<div class="number" id="low">0</div></div>
+<div class="stat">2× to below 10×<div class="number" id="mid">0</div></div>
+<div class="stat">10× or higher<div class="number" id="big">0</div></div>
+</div>
 </div>
 <div class="card">
-<h3>History statistics</h3>
-<p>Rounds: <b id="count">0</b></p>
-<p>Average: <b id="average">—</b></p>
-<p>Highest: <b id="highest">—</b></p>
+<h3>ROUND HISTORY</h3>
+<div id="list">No results entered yet.</div>
 </div>
 <div class="card">
-<small>Simulated results are random and cannot reveal or guarantee the next real Aviator multiplier.</small>
+<b>Important</b>
+<p>Past results cannot reliably predict the next round. This tool analyses entered history only and is not connected to YaarWin.</p>
 </div>
 </main>
 <script>
-let rounds=[];
-function generate(){
- let n=Math.random()<.7?1+Math.random()*1.5:1.5+Math.random()*8.5;
- n=Number(n.toFixed(2));
- rounds.unshift(n);
- document.getElementById('result').textContent=n.toFixed(2)+'x';
- render();
+function analyse(){
+const values=document.getElementById('history').value.split(/[\s,;]+/).map(Number).filter(n=>Number.isFinite(n)&&n>=1);
+const count=values.length;
+document.getElementById('count').textContent=count;
+document.getElementById('avg').textContent=count?(values.reduce((a,b)=>a+b,0)/count).toFixed(2)+'×':'—';
+document.getElementById('high').textContent=count?Math.max(...values).toFixed(2)+'×':'—';
+document.getElementById('low').textContent=values.filter(n=>n<2).length;
+document.getElementById('mid').textContent=values.filter(n=>n>=2&&n<10).length;
+document.getElementById('big').textContent=values.filter(n=>n>=10).length;
+document.getElementById('list').textContent=count?values.map(n=>n.toFixed(2)+'×').join(' • '):'No valid results entered.';
 }
-function render(){
- document.getElementById('count').textContent=rounds.length;
- document.getElementById('average').textContent=rounds.length?(rounds.reduce((a,b)=>a+b,0)/rounds.length).toFixed(2)+'x':'—';
- document.getElementById('highest').textContent=rounds.length?Math.max(...rounds).toFixed(2)+'x':'—';
- document.getElementById('history').innerHTML=rounds.length?rounds.slice(0,15).map((n,i)=>'<li>Round '+(rounds.length-i)+': '+n.toFixed(2)+'x</li>').join(''):'<li>No rounds yet</li>';
-}
-function clearHistory(){rounds=[];document.getElementById('result').textContent='--.--x';render();}
 </script>
 </body>
 </html>
